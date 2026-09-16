@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IRON BARRICADE</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Canvas principal -->
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- Overlay de UI -->
+    <div id="ui-overlay">
+      <!-- Telas serão gerenciadas por JS -->
+    </div>
+    
+    <!-- HUD de fase (oculto por padrão) -->
+    <div id="hud" class="hidden">
+      <div id="hud-top">
+        <div class="hud-resource">
+          <span class="icon energy-icon">⚡</span>
+          <span id="energy-count">50</span>
+        </div>
+        <div class="hud-resource">
+          <span class="icon scrap-icon">🔩</span>
+          <span id="scrap-count">0</span>
+        </div>
+        <div id="wave-info">
+          <span id="wave-label">Onda 1/8</span>
+          <div id="wave-bar"><div id="wave-fill"></div></div>
+        </div>
+        <div id="speed-controls">
+          <button class="speed-btn active" data-speed="1">1x</button>
+          <button class="speed-btn" data-speed="2">2x</button>
+          <button class="speed-btn" data-speed="3">3x</button>
+        </div>
+        <button id="pause-btn">⏸</button>
+      </div>
+      <div id="defender-cards"></div>
+      <div id="boss-bar" class="hidden">
+        <div id="boss-name">CHEFE</div>
+        <div id="boss-hp-bar"><div id="boss-hp-fill"></div></div>
+      </div>
+    </div>
+    
+    <!-- Diálogo de tutorial / narrativa -->
+    <div id="dialog-box" class="hidden">
+      <div id="dialog-portrait"></div>
+      <div id="dialog-content">
+        <div id="dialog-name">FORGE</div>
+        <div id="dialog-text"></div>
+      </div>
+      <button id="dialog-next">▶</button>
+    </div>
+    
+    <!-- Tela de pause -->
+    <div id="pause-menu" class="hidden">
+      <div class="menu-panel">
+        <h2>PAUSADO</h2>
+        <button class="menu-btn" id="resume-btn">CONTINUAR</button>
+        <button class="menu-btn" id="restart-btn">REINICIAR</button>
+        <button class="menu-btn" id="settings-pause-btn">CONFIGURAÇÕES</button>
+        <button class="menu-btn" id="map-btn">MAPA</button>
+        <button class="menu-btn" id="main-menu-btn">MENU PRINCIPAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts modulares -->
+  <script src="data/defenders.js"></script>
+  <script src="data/enemies.js"></script>
+  <script src="data/levels.js"></script>
+  <script src="data/upgrades.js"></script>
+  <script src="data/sprites.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/projectiles.js"></script>
+  <script src="js/defenders.js"></script>
+  <script src="js/enemies.js"></script>
+  <script src="js/grid.js"></script>
+  <script src="js/waves.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/achievements.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

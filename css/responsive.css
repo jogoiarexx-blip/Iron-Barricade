@@ -1,0 +1,121 @@
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 900px) {
+  .menu-btn {
+    min-width: 180px;
+    font-size: 0.95rem;
+    padding: 12px 20px;
+  }
+
+  #hud-top {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .hud-resource {
+    font-size: 0.95rem;
+    padding: 4px 10px;
+  }
+
+  .defender-card {
+    width: 60px;
+    min-width: 60px;
+    height: 78px;
+  }
+
+  .defender-card .card-icon {
+    font-size: 1.5rem;
+  }
+
+  .unit-select-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .logo-title {
+    font-size: 1.8rem;
+  }
+
+  .menu-panel {
+    padding: 24px 20px;
+  }
+
+  #defender-cards {
+    padding: 8px 6px;
+    gap: 5px;
+  }
+
+  .defender-card {
+    width: 52px;
+    min-width: 52px;
+    height: 70px;
+  }
+
+  .defender-card .card-name {
+    display: none;
+  }
+
+  #dialog-box {
+    bottom: 100px;
+    padding: 12px;
+  }
+
+  #dialog-portrait {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .difficulty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-panel {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  #hud-top {
+    padding: 4px 10px;
+  }
+
+  .defender-card {
+    height: 60px;
+    width: 50px;
+    min-width: 50px;
+  }
+
+  #defender-cards {
+    padding: 4px;
+  }
+
+  .logo-container {
+    margin-bottom: 16px;
+  }
+}
+
+/* Touch-friendly */
+@media (pointer: coarse) {
+  .menu-btn {
+    min-height: 48px;
+  }
+
+  .defender-card {
+    min-width: 64px;
+    width: 64px;
+  }
+
+  .level-node {
+    width: 64px;
+    height: 64px;
+  }
+
+  .level-node.boss {
+    width: 80px;
+    height: 80px;
+  }
+}

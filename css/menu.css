@@ -1,0 +1,596 @@
+/* ============================================
+   MENU & SCREENS
+   ============================================ */
+
+/* Loading Screen */
+#loading-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(10,14,20,0.60), rgba(10,14,20,0.82)), url('../assets/images/ui/iron-barricade-title-screen.png') center/cover no-repeat, radial-gradient(ellipse at 50% 30%, #1a2230 0%, #0a0e14 70%);
+  z-index: 100;
+}
+
+#loading-logo {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 0 30px rgba(255, 107, 26, 0.6);
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+
+#loading-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+#loading-bar-container {
+  width: min(400px, 80vw);
+  height: 12px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+#loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-glow) 100%);
+  transition: width 0.15s ease;
+  box-shadow: 0 0 15px var(--accent);
+}
+
+#loading-percent {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--energy);
+  margin-bottom: 32px;
+}
+
+#loading-tip {
+  max-width: 500px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 0 20px;
+}
+
+#loading-status {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+.loading-brand-wrap {
+  margin-bottom: 18px;
+}
+
+.brand-logo {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.55)) drop-shadow(0 0 22px rgba(255,107,26,0.22));
+}
+
+.loading-brand {
+  width: min(620px, 72vw);
+}
+
+.menu-brand {
+  width: min(760px, 78vw);
+}
+
+/* Main Menu */
+#main-menu {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(8,12,18,0.48), rgba(8,12,18,0.78)), url('../assets/images/ui/iron-barricade-title-screen.png') center/cover no-repeat, radial-gradient(ellipse at 30% 20%, #1a2a3a 0%, #0a0e14 60%);
+  z-index: 50;
+}
+
+#main-menu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 107, 26, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(0, 229, 255, 0.06) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+.logo-container {
+  margin-bottom: 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 0 40px rgba(255, 107, 26, 0.5);
+  letter-spacing: 3px;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+.logo-subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  color: var(--energy);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+@keyframes logoPulse {
+  0%, 100% { text-shadow: 0 0 30px rgba(255, 107, 26, 0.4); }
+  50% { text-shadow: 0 0 50px rgba(255, 107, 26, 0.7), 0 0 80px rgba(255, 107, 26, 0.3); }
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+.menu-footer {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+/* Campaign / World Map */
+#world-map {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0a0e14;
+  z-index: 40;
+}
+
+.world-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+}
+
+.world-header h2 {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.world-nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.world-nav button {
+  background: var(--bg-panel-light);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+}
+
+.world-nav button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.world-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+#map-canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#map-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.level-node {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  border: 3px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.level-node.unlocked {
+  border-color: var(--energy);
+  color: var(--energy);
+}
+
+.level-node.unlocked:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.level-node.completed {
+  border-color: var(--success);
+  color: var(--success);
+  background: rgba(34, 204, 102, 0.15);
+}
+
+.level-node.boss {
+  width: 72px;
+  height: 72px;
+  border-color: var(--danger);
+  color: var(--danger);
+  font-size: 0.75rem;
+}
+
+.level-node.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.level-stars {
+  position: absolute;
+  bottom: -18px;
+  font-size: 0.7rem;
+  color: #ffd700;
+  white-space: nowrap;
+}
+
+/* Pre-level select */
+#prelevel-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(5, 8, 12, 0.95);
+  z-index: 45;
+  padding: 20px;
+}
+
+.prelevel-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.prelevel-header h2 {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 1.6rem;
+}
+
+.prelevel-header p {
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+.unit-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  max-height: 55vh;
+}
+
+.unit-card {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.unit-card:hover {
+  border-color: var(--accent);
+}
+
+.unit-card.selected {
+  border-color: var(--energy);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+  background: rgba(0, 229, 255, 0.08);
+}
+
+.unit-card.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.unit-card .unit-icon {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+
+.unit-card .unit-name {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.unit-card .unit-cost {
+  color: var(--energy);
+  font-size: 0.85rem;
+}
+
+.selected-count {
+  text-align: center;
+  margin: 16px 0;
+  font-family: var(--font-display);
+  color: var(--text-dim);
+}
+
+.prelevel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Victory / Defeat screens */
+.result-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 12, 0.92);
+  z-index: 60;
+}
+
+.result-panel {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 36px 48px;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+}
+
+.result-panel.victory {
+  border-color: var(--success);
+  box-shadow: 0 0 40px rgba(34, 204, 102, 0.2);
+}
+
+.result-panel.defeat {
+  border-color: var(--danger);
+  box-shadow: 0 0 40px rgba(255, 51, 68, 0.2);
+}
+
+.result-panel h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.result-panel.victory h1 { color: var(--success); }
+.result-panel.defeat h1 { color: var(--danger); }
+
+.stars-display {
+  font-size: 2.5rem;
+  color: #ffd700;
+  margin: 12px 0;
+  letter-spacing: 8px;
+}
+
+.result-stats {
+  text-align: left;
+  margin: 20px 0;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.result-stats strong {
+  color: var(--text);
+}
+
+/* Workshop / Collection / etc */
+.screen-full {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-dark);
+  z-index: 40;
+  overflow: hidden;
+}
+
+.screen-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.screen-header h2 {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 1.3rem;
+}
+
+.screen-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Difficulty select */
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.difficulty-btn {
+  padding: 16px;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-display);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.difficulty-btn:hover, .difficulty-btn.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.difficulty-btn .diff-desc {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* ============================================
+   IRON BARRICADE - Animated title identity
+   ============================================ */
+
+#main-menu {
+  background-size: auto, cover, auto;
+  animation: ironMenuDrift 18s ease-in-out infinite alternate;
+}
+
+#loading-screen {
+  background-size: auto, cover, auto;
+  animation: ironLoadingDrift 12s ease-in-out infinite alternate;
+}
+
+.menu-brand {
+  transform-origin: center;
+  animation:
+    ironBrandEntrance 0.9s cubic-bezier(.2,.85,.25,1.15) both,
+    ironBrandFloat 4.5s ease-in-out 0.9s infinite;
+}
+
+.loading-brand {
+  transform-origin: center;
+  animation: ironLoadingPulse 2.8s ease-in-out infinite;
+}
+
+.logo-container::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  width: min(520px, 62vw);
+  height: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(255,107,26,.95), rgba(0,229,255,.85), transparent);
+  box-shadow: 0 0 16px rgba(255,107,26,.55);
+  animation: ironEnergySweep 2.6s ease-in-out infinite;
+}
+
+#main-menu .menu-buttons .menu-btn {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: ironButtonRise .45s ease-out forwards;
+}
+
+#main-menu .menu-buttons .menu-btn:nth-child(1) { animation-delay: .22s; }
+#main-menu .menu-buttons .menu-btn:nth-child(2) { animation-delay: .28s; }
+#main-menu .menu-buttons .menu-btn:nth-child(3) { animation-delay: .34s; }
+#main-menu .menu-buttons .menu-btn:nth-child(4) { animation-delay: .40s; }
+#main-menu .menu-buttons .menu-btn:nth-child(5) { animation-delay: .46s; }
+#main-menu .menu-buttons .menu-btn:nth-child(6) { animation-delay: .52s; }
+#main-menu .menu-buttons .menu-btn:nth-child(7) { animation-delay: .58s; }
+#main-menu .menu-buttons .menu-btn:nth-child(8) { animation-delay: .64s; }
+
+@keyframes ironBrandEntrance {
+  0% { opacity: 0; transform: scale(.78) translateY(-18px); filter: brightness(.5) drop-shadow(0 0 0 transparent); }
+  65% { opacity: 1; transform: scale(1.035) translateY(2px); filter: brightness(1.2) drop-shadow(0 0 30px rgba(255,107,26,.35)); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes ironBrandFloat {
+  0%, 100% { transform: translateY(0) scale(1); filter: brightness(1) drop-shadow(0 10px 24px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(255,107,26,.18)); }
+  50% { transform: translateY(-6px) scale(1.012); filter: brightness(1.08) drop-shadow(0 14px 28px rgba(0,0,0,.6)) drop-shadow(0 0 30px rgba(0,229,255,.20)); }
+}
+
+@keyframes ironLoadingPulse {
+  0%, 100% { transform: scale(.985); opacity: .9; filter: brightness(.9) drop-shadow(0 0 12px rgba(255,107,26,.18)); }
+  50% { transform: scale(1.02); opacity: 1; filter: brightness(1.12) drop-shadow(0 0 28px rgba(0,229,255,.22)); }
+}
+
+@keyframes ironEnergySweep {
+  0%, 100% { opacity: .45; transform: translateX(-50%) scaleX(.65); }
+  50% { opacity: 1; transform: translateX(-50%) scaleX(1); }
+}
+
+@keyframes ironButtonRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ironMenuDrift {
+  from { background-position: center, 48% 50%, center; }
+  to { background-position: center, 52% 48%, center; }
+}
+
+@keyframes ironLoadingDrift {
+  from { background-position: center, 49% 50%, center; }
+  to { background-position: center, 51% 49%, center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #main-menu,
+  #loading-screen,
+  .menu-brand,
+  .loading-brand,
+  .logo-container::after,
+  #main-menu .menu-buttons .menu-btn {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
