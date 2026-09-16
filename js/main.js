@@ -37,6 +37,7 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 async function boot() {
   // Load save
   Save.load();
+  Game.difficulty = Save.data.settings.gameplayDifficulty || 'normal';
   
   // Init audio (requires user gesture later)
   await Audio.init();

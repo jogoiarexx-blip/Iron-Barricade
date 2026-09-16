@@ -6,7 +6,7 @@
 const SPRITE_CONFIG = {
   // ===== DEFENDERS =====
   scrapGenerator: {
-    path: 'assets/images/sprites/defenders/scrap-generator.png',
+    path: 'assets/images/sprites/defenders/scrap-generator.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle:    { row: 0, frames: 4, fps: 6, loop: true },
@@ -16,7 +16,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '⚡', color: '#00e5ff', shape: 'generator' }
   },
   boltCannon: {
-    path: 'assets/images/sprites/defenders/bolt-cannon.png',
+    path: 'assets/images/sprites/defenders/bolt-cannon.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle:    { row: 0, frames: 4, fps: 5, loop: true },
@@ -27,7 +27,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🔩', color: '#ff8c42', shape: 'cannon' }
   },
   dualTower: {
-    path: 'assets/images/sprites/defenders/dual-tower.png',
+    path: 'assets/images/sprites/defenders/dual-tower.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -37,7 +37,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🔫', color: '#ffaa55', shape: 'tower' }
   },
   industrialFreezer: {
-    path: 'assets/images/sprites/defenders/industrial-freezer.png',
+    path: 'assets/images/sprites/defenders/industrial-freezer.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -47,7 +47,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '❄️', color: '#66ccff', shape: 'tower' }
   },
   teslaCoil: {
-    path: 'assets/images/sprites/defenders/tesla-coil.png',
+    path: 'assets/images/sprites/defenders/tesla-coil.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 6, fps: 8, loop: true },
@@ -57,7 +57,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '⚡', color: '#aa66ff', shape: 'coil' }
   },
   hydraulicPress: {
-    path: 'assets/images/sprites/defenders/hydraulic-press.png',
+    path: 'assets/images/sprites/defenders/hydraulic-press.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 3, fps: 4, loop: true },
@@ -67,7 +67,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🔨', color: '#cc6644', shape: 'press' }
   },
   tireWall: {
-    path: 'assets/images/sprites/defenders/tire-wall.png',
+    path: 'assets/images/sprites/defenders/tire-wall.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 2, fps: 2, loop: true },
@@ -77,7 +77,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🛞', color: '#555566', shape: 'wall' }
   },
   oilLauncher: {
-    path: 'assets/images/sprites/defenders/oil-launcher.png',
+    path: 'assets/images/sprites/defenders/oil-launcher.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -87,7 +87,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🛢️', color: '#443322', shape: 'tower' }
   },
   magneticTower: {
-    path: 'assets/images/sprites/defenders/magnetic-tower.png',
+    path: 'assets/images/sprites/defenders/magnetic-tower.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 6, loop: true },
@@ -97,7 +97,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🧲', color: '#4488ff', shape: 'tower' }
   },
   sentinelDrone: {
-    path: 'assets/images/sprites/defenders/sentinel-drone.png',
+    path: 'assets/images/sprites/defenders/sentinel-drone.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 6, fps: 10, loop: true },
@@ -107,7 +107,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🛸', color: '#66ffaa', shape: 'drone' }
   },
   scrapLauncher: {
-    path: 'assets/images/sprites/defenders/scrap-launcher.png',
+    path: 'assets/images/sprites/defenders/scrap-launcher.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -117,7 +117,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '💥', color: '#dd8844', shape: 'cannon' }
   },
   microwaveMod: {
-    path: 'assets/images/sprites/defenders/microwave-mod.png',
+    path: 'assets/images/sprites/defenders/microwave-mod.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 6, loop: true },
@@ -127,7 +127,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '📡', color: '#ff6644', shape: 'box' }
   },
   industrialFan: {
-    path: 'assets/images/sprites/defenders/industrial-fan.png',
+    path: 'assets/images/sprites/defenders/industrial-fan.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 8, fps: 12, loop: true },
@@ -137,7 +137,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '💨', color: '#88aacc', shape: 'fan' }
   },
   overloadedBattery: {
-    path: 'assets/images/sprites/defenders/overloaded-battery.png',
+    path: 'assets/images/sprites/defenders/overloaded-battery.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 8, loop: true },
@@ -146,7 +146,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🔋', color: '#ffee44', shape: 'box' }
   },
   plasmaTower: {
-    path: 'assets/images/sprites/defenders/plasma-tower.png',
+    path: 'assets/images/sprites/defenders/plasma-tower.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       idle: { row: 0, frames: 4, fps: 6, loop: true },
@@ -158,7 +158,7 @@ const SPRITE_CONFIG = {
 
   // ===== ENEMIES =====
   riftbornScout: {
-    path: 'assets/images/sprites/enemies/riftborn-scout.png',
+    path: 'assets/images/sprites/enemies/riftborn-scout.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 10, loop: true },
@@ -168,7 +168,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '👾', color: '#66aa44', shape: 'creature' }
   },
   riftbornRunner: {
-    path: 'assets/images/sprites/enemies/riftborn-runner.png',
+    path: 'assets/images/sprites/enemies/riftborn-runner.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 14, loop: true },
@@ -178,7 +178,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🏃', color: '#88cc55', shape: 'creature' }
   },
   riftbornBrute: {
-    path: 'assets/images/sprites/enemies/riftborn-brute.png',
+    path: 'assets/images/sprites/enemies/riftborn-brute.webp',
     frameWidth: 160, frameHeight: 160,
     animations: {
       walk: { row: 0, frames: 6, fps: 6, loop: true },
@@ -188,7 +188,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '👹', color: '#aa5533', shape: 'brute' }
   },
   riftbornShield: {
-    path: 'assets/images/sprites/enemies/riftborn-shield.png',
+    path: 'assets/images/sprites/enemies/riftborn-shield.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -198,7 +198,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🛡️', color: '#5588aa', shape: 'creature' }
   },
   riftbornFlyer: {
-    path: 'assets/images/sprites/enemies/riftborn-flyer.png',
+    path: 'assets/images/sprites/enemies/riftborn-flyer.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 12, loop: true },
@@ -208,7 +208,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🦇', color: '#9966cc', shape: 'flyer' }
   },
   riftbornBurrower: {
-    path: 'assets/images/sprites/enemies/riftborn-burrower.png',
+    path: 'assets/images/sprites/enemies/riftborn-burrower.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -218,7 +218,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🕳️', color: '#775533', shape: 'creature' }
   },
   riftbornTechnician: {
-    path: 'assets/images/sprites/enemies/riftborn-technician.png',
+    path: 'assets/images/sprites/enemies/riftborn-technician.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -228,7 +228,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🔧', color: '#44aacc', shape: 'creature' }
   },
   riftbornLeaper: {
-    path: 'assets/images/sprites/enemies/riftborn-leaper.png',
+    path: 'assets/images/sprites/enemies/riftborn-leaper.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 10, loop: true },
@@ -238,7 +238,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🦘', color: '#cc8844', shape: 'creature' }
   },
   riftbornSplitter: {
-    path: 'assets/images/sprites/enemies/riftborn-splitter.png',
+    path: 'assets/images/sprites/enemies/riftborn-splitter.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -248,7 +248,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🧬', color: '#66bb77', shape: 'creature' }
   },
   riftbornCommander: {
-    path: 'assets/images/sprites/enemies/riftborn-commander.png',
+    path: 'assets/images/sprites/enemies/riftborn-commander.webp',
     frameWidth: 160, frameHeight: 160,
     animations: {
       walk: { row: 0, frames: 6, fps: 7, loop: true },
@@ -258,7 +258,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '👑', color: '#ddaa22', shape: 'brute' }
   },
   riftbornSpitter: {
-    path: 'assets/images/sprites/enemies/riftborn-spitter.png',
+    path: 'assets/images/sprites/enemies/riftborn-spitter.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -268,7 +268,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🤢', color: '#88bb44', shape: 'creature' }
   },
   riftbornHeavy: {
-    path: 'assets/images/sprites/enemies/riftborn-heavy.png',
+    path: 'assets/images/sprites/enemies/riftborn-heavy.webp',
     frameWidth: 160, frameHeight: 160,
     animations: {
       walk: { row: 0, frames: 6, fps: 5, loop: true },
@@ -278,7 +278,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🦾', color: '#884422', shape: 'brute' }
   },
   riftbornSwarm: {
-    path: 'assets/images/sprites/enemies/riftborn-swarm.png',
+    path: 'assets/images/sprites/enemies/riftborn-swarm.webp',
     frameWidth: 96, frameHeight: 96,
     animations: {
       walk: { row: 0, frames: 4, fps: 12, loop: true },
@@ -287,7 +287,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🦠', color: '#99cc66', shape: 'swarm' }
   },
   riftbornStealth: {
-    path: 'assets/images/sprites/enemies/riftborn-stealth.png',
+    path: 'assets/images/sprites/enemies/riftborn-stealth.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 10, loop: true },
@@ -297,7 +297,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '👻', color: '#556677', shape: 'creature' }
   },
   riftbornBomber: {
-    path: 'assets/images/sprites/enemies/riftborn-bomber.png',
+    path: 'assets/images/sprites/enemies/riftborn-bomber.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -307,7 +307,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '💣', color: '#cc4444', shape: 'creature' }
   },
   riftbornHealer: {
-    path: 'assets/images/sprites/enemies/riftborn-healer.png',
+    path: 'assets/images/sprites/enemies/riftborn-healer.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -317,7 +317,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '💚', color: '#44cc88', shape: 'creature' }
   },
   riftbornTank: {
-    path: 'assets/images/sprites/enemies/riftborn-tank.png',
+    path: 'assets/images/sprites/enemies/riftborn-tank.webp',
     frameWidth: 192, frameHeight: 192,
     animations: {
       walk: { row: 0, frames: 6, fps: 4, loop: true },
@@ -327,7 +327,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🦏', color: '#665544', shape: 'brute' }
   },
   riftbornSniper: {
-    path: 'assets/images/sprites/enemies/riftborn-sniper.png',
+    path: 'assets/images/sprites/enemies/riftborn-sniper.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 7, loop: true },
@@ -337,7 +337,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🎯', color: '#aa66aa', shape: 'creature' }
   },
   riftbornElite: {
-    path: 'assets/images/sprites/enemies/riftborn-elite.png',
+    path: 'assets/images/sprites/enemies/riftborn-elite.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 10, loop: true },
@@ -347,7 +347,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '⚔️', color: '#ccaa44', shape: 'creature' }
   },
   riftbornInfector: {
-    path: 'assets/images/sprites/enemies/riftborn-infector.png',
+    path: 'assets/images/sprites/enemies/riftborn-infector.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       walk: { row: 0, frames: 6, fps: 8, loop: true },
@@ -359,7 +359,7 @@ const SPRITE_CONFIG = {
 
   // ===== BOSSES =====
   ironcladColossus: {
-    path: 'assets/images/sprites/bosses/ironclad-colossus.png',
+    path: 'assets/images/sprites/bosses/ironclad-colossus.webp',
     frameWidth: 256, frameHeight: 256,
     animations: {
       idle: { row: 0, frames: 4, fps: 4, loop: true },
@@ -371,7 +371,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🚗', color: '#cc4422', shape: 'boss' }
   },
   shadeStalkerPrime: {
-    path: 'assets/images/sprites/bosses/shade-stalker-prime.png',
+    path: 'assets/images/sprites/bosses/shade-stalker-prime.webp',
     frameWidth: 256, frameHeight: 256,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -382,7 +382,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🌑', color: '#334466', shape: 'boss' }
   },
   duneDevourer: {
-    path: 'assets/images/sprites/bosses/dune-devourer.png',
+    path: 'assets/images/sprites/bosses/dune-devourer.webp',
     frameWidth: 256, frameHeight: 256,
     animations: {
       idle: { row: 0, frames: 4, fps: 4, loop: true },
@@ -393,7 +393,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '🏜️', color: '#cc9944', shape: 'boss' }
   },
   corebreaker: {
-    path: 'assets/images/sprites/bosses/corebreaker.png',
+    path: 'assets/images/sprites/bosses/corebreaker.webp',
     frameWidth: 256, frameHeight: 256,
     animations: {
       idle: { row: 0, frames: 4, fps: 5, loop: true },
@@ -404,7 +404,7 @@ const SPRITE_CONFIG = {
     placeholder: { icon: '☢️', color: '#44aaff', shape: 'boss' }
   },
   riftbornOverlord: {
-    path: 'assets/images/sprites/bosses/riftborn-overlord.png',
+    path: 'assets/images/sprites/bosses/riftborn-overlord.webp',
     frameWidth: 320, frameHeight: 320,
     animations: {
       idle: { row: 0, frames: 6, fps: 5, loop: true },
@@ -418,39 +418,39 @@ const SPRITE_CONFIG = {
 
   // ===== BACKGROUNDS =====
   bg_world1: {
-    path: 'assets/images/backgrounds/world1-scrapyard.png',
+    path: 'assets/images/backgrounds/world1-scrapyard.webp',
     frameWidth: 1920, frameHeight: 1080,
     placeholder: { color: '#1a2a1a', type: 'bg' }
   },
   bg_world2: {
-    path: 'assets/images/backgrounds/world2-night.png',
+    path: 'assets/images/backgrounds/world2-night.webp',
     frameWidth: 1920, frameHeight: 1080,
     placeholder: { color: '#0a0e18', type: 'bg' }
   },
   bg_world3: {
-    path: 'assets/images/backgrounds/world3-desert.png',
+    path: 'assets/images/backgrounds/world3-desert.webp',
     frameWidth: 1920, frameHeight: 1080,
     placeholder: { color: '#2a2210', type: 'bg' }
   },
   bg_world4: {
-    path: 'assets/images/backgrounds/world4-factory.png',
+    path: 'assets/images/backgrounds/world4-factory.webp',
     frameWidth: 1920, frameHeight: 1080,
     placeholder: { color: '#0e1a22', type: 'bg' }
   },
   bg_world5: {
-    path: 'assets/images/backgrounds/world5-mothership.png',
+    path: 'assets/images/backgrounds/world5-mothership.webp',
     frameWidth: 1920, frameHeight: 1080,
     placeholder: { color: '#1a0a22', type: 'bg' }
   },
 
   // ===== UI / FX =====
   ui_energy: {
-    path: 'assets/images/ui/energy-icon.png',
+    path: 'assets/images/ui/energy-icon.webp',
     frameWidth: 64, frameHeight: 64,
     placeholder: { icon: '⚡', color: '#00e5ff', shape: 'icon' }
   },
   fx_explosion: {
-    path: 'assets/images/sprites/effects/explosion.png',
+    path: 'assets/images/sprites/effects/explosion.webp',
     frameWidth: 128, frameHeight: 128,
     animations: {
       play: { row: 0, frames: 8, fps: 16, loop: false }

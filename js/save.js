@@ -47,8 +47,10 @@ const DEFAULT_SAVE = {
     damageNumbers: true,
     fullscreen: false,
     language: 'pt-BR',
-    vibration: true
+    vibration: true,
+    gameplayDifficulty: 'normal'
   },
+  cosmetics: { owned: [], equipped: {} },
   survival: {
     bestWave: 0,
     bestScore: 0,

@@ -4,6 +4,25 @@
 
 let defenderIdCounter = 0;
 
+
+const DEFENDER_VISUAL_TUNING = {
+  scrapGenerator: { spriteScale: 1.08, offsetY: 0.12 },
+  boltCannon: { spriteScale: 1.06, offsetY: 0.10 },
+  dualTower: { spriteScale: 1.08, offsetY: 0.10 },
+  industrialFreezer: { spriteScale: 1.06, offsetY: 0.10 },
+  teslaCoil: { spriteScale: 1.02, offsetY: 0.08 },
+  hydraulicPress: { spriteScale: 1.14, offsetY: 0.12 },
+  tireWall: { spriteScale: 1.10, offsetY: 0.16 },
+  oilLauncher: { spriteScale: 1.08, offsetY: 0.10 },
+  magneticTower: { spriteScale: 1.08, offsetY: 0.10 },
+  sentinelDrone: { spriteScale: 1.12, offsetY: -0.04 },
+  scrapLauncher: { spriteScale: 1.12, offsetY: 0.12 },
+  microwaveMod: { spriteScale: 1.08, offsetY: 0.10 },
+  industrialFan: { spriteScale: 1.10, offsetY: 0.12 },
+  overloadedBattery: { spriteScale: 1.00, offsetY: 0.12 },
+  plasmaTower: { spriteScale: 1.08, offsetY: 0.10 }
+};
+
 class Defender {
   constructor(data, upgradeLevel = 1) {
     this.id = ++defenderIdCounter;
@@ -26,6 +45,12 @@ class Defender {
     this.disableTimer = 0;
     this.animFrame = 0;
     this.animTimer = 0;
+    this.animClock = Math.random() * 10;
+    this.placementTimer = 0.34;
+    this.hitFlash = 0;
+    this.visualTuning = DEFENDER_VISUAL_TUNING[this.data.id] || {};
+    this.spriteScale = this.visualTuning.spriteScale || 1;
+    this.spriteOffsetYFactor = this.visualTuning.offsetY ?? (this.data.type === 'wall' ? 0.14 : 0.08);
     this.state = 'idle'; // idle, attack, damage, destroy
     this.produceTimer = data.produceInterval || 0;
     this.triggerTimer = data.triggerDelay || 0;
@@ -34,6 +59,14 @@ class Defender {
 
   update(dt, enemies, grid, game) {
     if (!this.alive) return;
+
+    this.animClock += dt;
+    if (this.placementTimer > 0) this.placementTimer = Math.max(0, this.placementTimer - dt);
+    if (this.hitFlash > 0) this.hitFlash = Math.max(0, this.hitFlash - dt);
+    if (this.animTimer > 0) {
+      this.animTimer = Math.max(0, this.animTimer - dt);
+      if (this.animTimer === 0 && this.state !== 'destroy') this.state = 'idle';
+    }
 
     if (this.disabled) {
       this.disableTimer -= dt * 1000;
@@ -257,6 +290,7 @@ class Defender {
     this.hp -= amount;
     this.state = 'damage';
     this.animTimer = 0.2;
+    this.hitFlash = 0.12;
     Particles.emit(this.x, this.y, 'spark', 4);
     if (this.hp <= 0) {
       this.alive = false;
@@ -274,17 +308,34 @@ class Defender {
   draw(ctx, cellSize) {
     if (!this.alive && this.state !== 'destroy') return;
     
-    const s = cellSize * 0.7;
+    const s = cellSize * 0.7 * this.spriteScale;
+    const spriteOffsetY = cellSize * this.spriteOffsetYFactor;
     ctx.save();
     ctx.translate(this.x, this.y);
+
+    // Procedural life: placement pop, idle float and attack recoil.
+    let scale = 1;
+    if (this.placementTimer > 0) {
+      const p = 1 - this.placementTimer / 0.34;
+      scale = Math.min(1.08, 0.25 + p * 1.05);
+    }
+    const idleBob = this.data.type === 'wall' ? 0 : Math.sin(this.animClock * 2.8 + this.id * 0.6) * 1.5;
+    let recoil = 0;
+    if (this.state === 'attack' && this.animTimer > 0) recoil = -Math.sin((this.animTimer / 0.3) * Math.PI) * 5;
+    ctx.translate(recoil, idleBob);
+    ctx.scale(scale, scale);
 
     if (this.disabled) {
       ctx.globalAlpha = 0.5;
     }
+    if (this.hitFlash > 0) {
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 16;
+    }
 
     // Try loaded sprite first
     if (typeof Assets !== 'undefined' && Assets.has(this.data.id)) {
-      Assets.draw(ctx, this.data.id, 0, 0, s, { name: this.state || 'idle', time: (this.animTimer || 0) });
+      Assets.draw(ctx, this.data.id, 0, spriteOffsetY, s, { name: this.state || 'idle', time: (this.animTimer || 0) });
       // HP bar
       if (this.hp < this.maxHp) {
         const bw = s * 0.8, bh = 5;

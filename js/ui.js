@@ -22,7 +22,7 @@ class UIManager {
     el.id = 'loading-screen';
     el.innerHTML = `
       <div class="loading-brand-wrap">
-        <img class="brand-logo loading-brand" src="assets/images/ui/iron-barricade-logo.png" alt="Iron Barricade">
+        <img class="brand-logo loading-brand" src="assets/images/ui/iron-barricade-logo.webp" alt="Iron Barricade">
       </div>
       <div id="loading-logo">${title || 'IRON'}</div>
       <div id="loading-subtitle">${subtitle || 'BARRICADE'}</div>
@@ -95,20 +95,21 @@ class UIManager {
     el.id = 'main-menu';
     el.innerHTML = `
       <div class="logo-container">
-        <img class="brand-logo menu-brand" src="assets/images/ui/iron-barricade-logo.png" alt="Iron Barricade">
+        <img class="brand-logo menu-brand" src="assets/images/ui/iron-barricade-logo.webp" alt="Iron Barricade">
         <div class="logo-subtitle">SCRAP FORTRESS DEFENSE</div>
       </div>
       <div class="menu-buttons">
         <button class="menu-btn primary" data-action="play">JOGAR</button>
         <button class="menu-btn" data-action="continue">CONTINUAR</button>
         <button class="menu-btn" data-action="workshop">OFICINA</button>
+        <button class="menu-btn" data-action="shop">LOJA</button>
         <button class="menu-btn" data-action="collection">COLEÇÃO</button>
         <button class="menu-btn" data-action="achievements">CONQUISTAS</button>
         <button class="menu-btn" data-action="stats">ESTATÍSTICAS</button>
         <button class="menu-btn" data-action="settings">CONFIGURAÇÕES</button>
         <button class="menu-btn" data-action="credits">CRÉDITOS</button>
       </div>
-      <div class="menu-footer">v1.3 • Iron Barricade</div>
+      <div class="menu-footer">v1.7 • Gameplay & Balance</div>
     `;
     this.overlay.appendChild(el);
     this.currentScreen = 'main';
@@ -125,8 +126,6 @@ class UIManager {
         <button class="menu-btn primary" data-action="newgame">NOVO JOGO</button>
         <button class="menu-btn" data-action="continue">CONTINUAR CAMPANHA</button>
         <button class="menu-btn" data-action="selectlevel">SELECIONAR FASE</button>
-        <button class="menu-btn" data-action="challenges">DESAFIOS</button>
-        <button class="menu-btn" data-action="survival">MODO SOBREVIVÊNCIA</button>
         <button class="menu-btn" data-action="back">VOLTAR</button>
       </div>
     `;
@@ -144,19 +143,19 @@ class UIManager {
         <div class="difficulty-grid">
           <button class="difficulty-btn" data-diff="easy">
             FÁCIL
-            <div class="diff-desc">Inimigos mais fracos, mais energia</div>
+            <div class="diff-desc">Inimigos mais fracos • 80% da sucata</div>
           </button>
           <button class="difficulty-btn selected" data-diff="normal">
             NORMAL
-            <div class="diff-desc">Experiência equilibrada</div>
+            <div class="diff-desc">Experiência equilibrada • 100% da sucata</div>
           </button>
           <button class="difficulty-btn" data-diff="hard">
             DIFÍCIL
-            <div class="diff-desc">Mais inimigos, menos recursos</div>
+            <div class="diff-desc">Inimigos mais fortes • 125% da sucata</div>
           </button>
           <button class="difficulty-btn" data-diff="nightmare">
             PESADELO
-            <div class="diff-desc">Para os verdadeiros inventores</div>
+            <div class="diff-desc">Pressão máxima • 160% da sucata</div>
           </button>
         </div>
         <button class="menu-btn primary" data-action="confirm-diff">CONFIRMAR</button>
@@ -164,8 +163,9 @@ class UIManager {
       </div>
     `;
     this.overlay.appendChild(el);
-    let selected = 'normal';
+    let selected = Save.data.settings.gameplayDifficulty || 'normal';
     el.querySelectorAll('.difficulty-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.diff === selected);
       btn.addEventListener('click', () => {
         el.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
@@ -175,6 +175,8 @@ class UIManager {
     });
     el.querySelector('[data-action="confirm-diff"]').addEventListener('click', () => {
       Audio.playSfx('click');
+      Save.data.settings.gameplayDifficulty = selected;
+      Save.autoSave();
       callback(selected);
     });
     el.querySelector('[data-action="back"]').addEventListener('click', () => {
@@ -261,11 +263,43 @@ class UIManager {
     this.clear();
     const level = getLevel(levelId);
     if (!level) return;
-    
-    this.selectedUnits = [];
-    // Auto-select first unlocked up to max
-    const unlocked = Save.data.defenders.unlocked;
+
+    const obj = level.specialObjective;
+    const basicAllowed = ['boltCannon', 'scrapGenerator', 'tireWall', 'dualTower'];
+    const isAllowed = (id) => {
+      if (!obj) return true;
+      if (obj.type === 'noGenerators' && id === 'scrapGenerator') return false;
+      if (obj.type === 'onlyBasic') return basicAllowed.includes(id);
+      return true;
+    };
+
+    const unlocked = Save.data.defenders.unlocked.filter(isAllowed);
     this.selectedUnits = unlocked.slice(0, this.maxUnits);
+
+    const threatIds = [];
+    let introduced = null;
+    for (const wave of level.waves || []) {
+      if (wave.introducedEnemy) introduced = wave.introducedEnemy;
+      for (const g of wave.enemies || []) {
+        const id = g.type === 'boss' ? g.bossId : g.type;
+        if (id && !threatIds.includes(id)) threatIds.push(id);
+      }
+    }
+
+    const threatCards = threatIds.map(id => {
+      const e = getEnemyData(id);
+      if (!e) return '';
+      const fresh = id === introduced || (level.index === 1 && id === 'riftbornScout');
+      return `<div class="threat-card ${fresh ? 'new-threat' : ''}">
+        <div class="threat-icon">${e.icon || '👾'}</div>
+        <div><strong>${e.name}</strong>${fresh ? '<span class="new-tag">NOVO</span>' : ''}<small>${e.description || ''}</small></div>
+      </div>`;
+    }).join('');
+
+    const starDescriptions = level.starDescriptions || ['Concluir a fase','Não usar Compactador','Objetivo especial'];
+    const ruleNote = obj?.type === 'limitedEnergy' ? 'Energia armazenada limitada e sem geração ambiente.' :
+      obj?.type === 'noGenerators' ? 'Gerador de Sucata bloqueado nesta missão.' :
+      obj?.type === 'onlyBasic' ? 'Somente máquinas básicas podem ser selecionadas.' : '';
 
     const el = document.createElement('div');
     el.id = 'prelevel-screen';
@@ -273,7 +307,14 @@ class UIManager {
       <div class="prelevel-header">
         <h2>${level.name}</h2>
         <p>Selecione até ${this.maxUnits} máquinas para esta missão</p>
-        ${level.specialObjective ? `<p style="color:var(--accent)">Objetivo especial: ${level.specialObjective.desc}</p>` : ''}
+        ${obj ? `<p style="color:var(--accent)">Objetivo especial: ${obj.desc}</p>` : ''}
+        ${ruleNote ? `<p class="mission-rule">${ruleNote}</p>` : ''}
+      </div>
+      <div class="mission-briefing">
+        <div class="brief-block"><h3>AMEAÇAS DETECTADAS</h3><div class="threat-grid">${threatCards}</div></div>
+        <div class="brief-block star-goals"><h3>METAS DE ESTRELAS</h3>
+          <div>★ ${starDescriptions[0]}</div><div>★★ ${starDescriptions[1]}</div><div>★★★ ${starDescriptions[2]}</div>
+        </div>
       </div>
       <div class="unit-select-grid" id="unit-grid"></div>
       <div class="selected-count">Selecionadas: <span id="sel-count">${this.selectedUnits.length}</span>/${this.maxUnits}</div>
@@ -286,17 +327,19 @@ class UIManager {
 
     const grid = el.querySelector('#unit-grid');
     getAllDefenders().forEach(d => {
-      const unlocked = Save.data.defenders.unlocked.includes(d.id);
+      const unlockedDef = Save.data.defenders.unlocked.includes(d.id);
+      const allowed = isAllowed(d.id);
       const selected = this.selectedUnits.includes(d.id);
       const card = document.createElement('div');
-      card.className = `unit-card ${unlocked ? '' : 'locked'} ${selected ? 'selected' : ''}`;
+      card.className = `unit-card ${unlockedDef && allowed ? '' : 'locked'} ${selected ? 'selected' : ''}`;
       card.dataset.id = d.id;
       card.innerHTML = `
         <div class="unit-icon">${d.icon}</div>
         <div class="unit-name">${d.name}</div>
         <div class="unit-cost">⚡ ${d.cost}</div>
+        ${unlockedDef && !allowed ? '<div class="unit-rule-lock">BLOQUEADA NESTA MISSÃO</div>' : ''}
       `;
-      if (unlocked) {
+      if (unlockedDef && allowed) {
         card.addEventListener('click', () => {
           Audio.playSfx('click');
           const idx = this.selectedUnits.indexOf(d.id);
@@ -335,6 +378,10 @@ class UIManager {
           <div>Pontuação: <strong>${stats.score}</strong></div>
           <div>Sucata: <strong>+${stats.scrap}</strong></div>
           <div>Inimigos derrotados: <strong>${stats.kills}</strong></div>
+          <div>Tempo: <strong>${Math.floor(stats.elapsedTime / 60)}:${String(Math.floor(stats.elapsedTime % 60)).padStart(2, '0')}</strong></div>
+          <div class="star-result-lines">
+            ${(stats.starDescriptions || []).map((d,i) => `<div>${i < stats.stars ? '✓' : '○'} ${'★'.repeat(i+1)} ${d}</div>`).join('')}
+          </div>
           ${stats.unlocks.length ? `<div style="color:var(--energy)">Novas máquinas desbloqueadas!</div>` : ''}
         </div>
         <button class="menu-btn primary" data-action="next">PRÓXIMA FASE</button>
@@ -437,6 +484,33 @@ class UIManager {
     });
   }
 
+  showShop() {
+    this.clear();
+    const el = document.createElement('div');
+    el.className = 'screen-full';
+    el.innerHTML = `
+      <div class="screen-header">
+        <button class="menu-btn" data-action="back" style="min-width:auto;padding:8px 16px;">← Voltar</button>
+        <h2>LOJA DE SUCATA</h2>
+        <div style="color:var(--scrap)">🔩 ${Save.data.resources.scrap}</div>
+      </div>
+      <div class="screen-content" id="shop-list"></div>
+    `;
+    this.overlay.appendChild(el);
+    const list = el.querySelector('#shop-list');
+    Shop.getItems().forEach(item => {
+      const owned = Shop.isOwned(item.id);
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--bg-panel);border:2px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px';
+      row.innerHTML = `<div><strong style="color:var(--accent)">${item.name}</strong><div style="color:var(--text-dim);font-size:.82rem">Cosmético • não altera o balanceamento</div></div>
+        <button class="menu-btn" style="min-width:130px;padding:10px" ${owned || !Shop.canBuy(item.id) ? 'disabled' : ''}>${owned ? 'COMPRADO' : `🔩 ${item.cost}`}</button>`;
+      const btn = row.querySelector('button');
+      if (!owned && Shop.canBuy(item.id)) btn.addEventListener('click', () => { if (Shop.buy(item.id)) this.showShop(); });
+      list.appendChild(row);
+    });
+    el.querySelector('[data-action="back"]').addEventListener('click', () => this.showMainMenu());
+  }
+
   showSettings(fromPause = false) {
     this.clear();
     const s = Save.data.settings;
@@ -532,16 +606,7 @@ class UIManager {
 
   showAchievements() {
     this.clear();
-    const achievements = [
-      { id: 'first_contact', name: 'Primeiro Contato', desc: 'Derrote seu primeiro Riftborn' },
-      { id: 'scrapyard_safe', name: 'Ferro-Velho Seguro', desc: 'Complete o Mundo 1' },
-      { id: 'scrap_master', name: 'Mestre da Sucata', desc: 'Colete 10.000 sucatas' },
-      { id: 'no_scratches', name: 'Sem Arranhões', desc: 'Complete uma fase sem usar compactadores' },
-      { id: 'engineer', name: 'Engenheiro', desc: 'Melhore uma máquina ao nível máximo' },
-      { id: 'survivor', name: 'Sobrevivente', desc: 'Sobreviva 10 ondas no modo sobrevivência' },
-      { id: 'boss_slayer', name: 'Caçador de Chefes', desc: 'Derrote 3 chefes' },
-      { id: 'builder', name: 'Construtor', desc: 'Construa 100 máquinas' }
-    ];
+    const achievements = (typeof ACHIEVEMENTS !== 'undefined' ? ACHIEVEMENTS : []);
     const el = document.createElement('div');
     el.className = 'screen-full';
     el.innerHTML = `
@@ -626,14 +691,13 @@ class UIManager {
             break;
           case 'selectlevel': this.showWorldMap(); break;
           case 'workshop': this.showWorkshop(); break;
+          case 'shop': this.showShop(); break;
           case 'collection': this.showCollection(); break;
           case 'achievements': this.showAchievements(); break;
           case 'stats': this.showStats(); break;
           case 'settings': this.showSettings(); break;
           case 'credits': this.showCredits(); break;
           case 'back': this.showMainMenu(); break;
-          case 'challenges': alert('Desafios em breve!'); break;
-          case 'survival': alert('Modo Sobrevivência desbloqueado após avançar na campanha!'); break;
         }
       });
     });

@@ -16,9 +16,16 @@ class ShopManager {
     return item && Save.data.resources.scrap >= item.cost;
   }
   buy(id) {
-    // Placeholder - cosmetics only, no gameplay impact
-    return false;
+    const item = SHOP_ITEMS.find(i => i.id === id);
+    if (!item || !this.canBuy(id)) return false;
+    const owned = Save.data.cosmetics.owned || (Save.data.cosmetics.owned = []);
+    if (owned.includes(id)) return false;
+    Save.data.resources.scrap -= item.cost;
+    owned.push(id);
+    Save.autoSave();
+    return true;
   }
+  isOwned(id) { return (Save.data.cosmetics.owned || []).includes(id); }
 }
 
 const Shop = new ShopManager();

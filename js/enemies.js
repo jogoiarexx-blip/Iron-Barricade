@@ -5,6 +5,40 @@
 
 let enemyIdCounter = 0;
 
+// Ritmo-base de deslocamento dos inimigos.
+// Mantém a diferença entre tipos (Runner continua rápido, Brute continua lento),
+// mas dá ao jogador mais tempo para reagir e montar a defesa.
+const ENEMY_MOVE_SCALE = 0.72;
+
+
+const ENEMY_VISUAL_TUNING = {
+  riftbornScout: { hitboxScale: 0.90, spriteScale: 1.10, offsetY: 0.10 },
+  riftbornRunner: { hitboxScale: 0.78, spriteScale: 1.12, offsetY: 0.08 },
+  riftbornBrute: { hitboxScale: 0.94, spriteScale: 1.20, offsetY: 0.13 },
+  riftbornShield: { hitboxScale: 0.92, spriteScale: 1.16, offsetY: 0.12 },
+  riftbornFlyer: { hitboxScale: 0.74, spriteScale: 1.18, offsetY: -0.18 },
+  riftbornBurrower: { hitboxScale: 0.88, spriteScale: 1.02, offsetY: 0.10 },
+  riftbornTechnician: { hitboxScale: 0.86, spriteScale: 1.10, offsetY: 0.10 },
+  riftbornLeaper: { hitboxScale: 0.88, spriteScale: 1.10, offsetY: 0.10 },
+  riftbornSplitter: { hitboxScale: 0.90, spriteScale: 1.12, offsetY: 0.11 },
+  riftbornCommander: { hitboxScale: 0.94, spriteScale: 1.18, offsetY: 0.12 },
+  riftbornSpitter: { hitboxScale: 0.86, spriteScale: 1.08, offsetY: 0.09 },
+  riftbornHeavy: { hitboxScale: 0.98, spriteScale: 1.24, offsetY: 0.14 },
+  riftbornSwarm: { hitboxScale: 0.72, spriteScale: 1.00, offsetY: 0.06 },
+  riftbornStealth: { hitboxScale: 0.86, spriteScale: 1.08, offsetY: 0.10 },
+  riftbornBomber: { hitboxScale: 0.90, spriteScale: 1.12, offsetY: 0.11 },
+  riftbornHealer: { hitboxScale: 0.86, spriteScale: 1.08, offsetY: 0.09 },
+  riftbornTank: { hitboxScale: 1.02, spriteScale: 1.26, offsetY: 0.16 },
+  riftbornSniper: { hitboxScale: 0.84, spriteScale: 1.08, offsetY: 0.08 },
+  riftbornElite: { hitboxScale: 0.92, spriteScale: 1.16, offsetY: 0.11 },
+  riftbornInfector: { hitboxScale: 0.86, spriteScale: 1.08, offsetY: 0.10 },
+  ironcladColossus: { hitboxScale: 0.88, spriteScale: 1.18, offsetY: 0.22 },
+  shadeStalkerPrime: { hitboxScale: 0.76, spriteScale: 1.16, offsetY: 0.14 },
+  duneDevourer: { hitboxScale: 0.95, spriteScale: 1.12, offsetY: 0.18 },
+  corebreaker: { hitboxScale: 0.84, spriteScale: 1.18, offsetY: 0.14 },
+  riftbornOverlord: { hitboxScale: 0.86, spriteScale: 1.20, offsetY: 0.20 }
+};
+
 class Enemy {
   constructor(data, row, grid, hpMult = 1) {
     this.id = ++enemyIdCounter;
@@ -21,7 +55,11 @@ class Enemy {
     this.baseArmor = this.armor;
     this.x = grid.getSpawnX();
     this.y = grid.getLaneY(row);
-    this.radius = (data.size || 1) * grid.cellSize * 0.28;
+    this.baseSize = data.size || 1;
+    this.visualTuning = ENEMY_VISUAL_TUNING[data.id] || {};
+    this.radius = this.baseSize * (this.visualTuning.hitboxScale || 1) * grid.cellSize * 0.28;
+    this.drawSize = this.baseSize * grid.cellSize * 0.56 * (this.visualTuning.spriteScale || 1);
+    this.drawOffsetY = grid.cellSize * (this.visualTuning.offsetY ?? (data.type === 'air' ? -0.12 : 0.08));
     this.alive = true;
     this.status = {};
     this.shieldHp = data.shieldHp || 0;
@@ -42,6 +80,8 @@ class Enemy {
     this.burrowTimer = 0;
     this.spawnedByBoss = false;
     this.animTime = Math.random() * 10;
+    this.spawnTimer = 0.38;
+    this.hitFlash = 0;
   }
 
   applyStatus(effect) {
@@ -126,6 +166,8 @@ class Enemy {
   update(dt, grid, defenders, game) {
     if (!this.alive) return;
     this.animTime += dt;
+    if (this.spawnTimer > 0) this.spawnTimer = Math.max(0, this.spawnTimer - dt);
+    if (this.hitFlash > 0) this.hitFlash = Math.max(0, this.hitFlash - dt);
     this.updateStatus(dt);
     if (this.hp <= 0) {
       this.die(game);
@@ -210,7 +252,7 @@ class Enemy {
         Audio.playSfx('place', 0.4);
       }
     } else {
-      this.x -= this.speed * grid.cellSize * dt * 1.2;
+      this.x -= this.speed * grid.cellSize * dt * ENEMY_MOVE_SCALE;
     }
 
     if (this.x < grid.getBaseX()) {
@@ -528,6 +570,7 @@ class Enemy {
     }
     const finalDmg = amount * (1 - this.armor);
     this.hp -= finalDmg;
+    this.hitFlash = 0.10;
     Particles.emit(this.x, this.y, type === 'electric' ? 'electric' : 'spark', 3);
   }
 
@@ -586,11 +629,21 @@ class Enemy {
 
     ctx.save();
     ctx.translate(this.x, this.y);
-    const s = this.radius * 2;
+    const s = this.drawSize || (this.radius * 2);
     const bob = Math.sin(this.animTime * 6) * 2;
+    if (this.spawnTimer > 0) {
+      const p = 1 - this.spawnTimer / 0.38;
+      const scale = 0.35 + Math.min(1, p * 1.15) * 0.65;
+      ctx.scale(scale, scale);
+      ctx.globalAlpha *= Math.min(1, p * 2.5);
+    }
+    if (this.hitFlash > 0) {
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = this.isBoss ? 24 : 14;
+    }
 
     if (typeof Assets !== 'undefined' && Assets.has(this.data.id)) {
-      Assets.draw(ctx, this.data.id, 0, bob, s, { name: 'walk', time: this.animTime });
+      Assets.draw(ctx, this.data.id, 0, bob + this.drawOffsetY, s, { name: 'walk', time: this.animTime });
     } else {
       // Improved procedural body
       ctx.fillStyle = this.data.color || '#66aa44';

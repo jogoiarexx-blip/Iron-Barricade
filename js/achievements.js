@@ -9,7 +9,9 @@ const ACHIEVEMENTS = [
   { id: 'no_scratches', name: 'Sem Arranhões', desc: 'Complete uma fase sem compactadores' },
   { id: 'engineer', name: 'Engenheiro', desc: 'Melhore uma máquina ao nível máximo', check: () => Object.values(Save.data.defenders.levels).some(l => l >= 5) },
   { id: 'builder', name: 'Construtor', desc: 'Construa 100 máquinas', check: (s) => s.machinesBuilt >= 100 },
-  { id: 'boss_slayer', name: 'Caçador de Chefes', desc: 'Derrote 3 chefes', check: (s) => s.bossesDefeated >= 3 }
+  { id: 'boss_slayer', name: 'Caçador de Chefes', desc: 'Derrote 3 chefes', check: (s) => s.bossesDefeated >= 3 },
+  { id: 'perfect_engineer', name: 'Linha Perfeita', desc: 'Conclua uma fase sem perder máquinas', check: () => Save.data.achievements.unlocked.includes('perfect_engineer') },
+  { id: 'three_star', name: 'Trabalho Impecável', desc: 'Consiga 3 estrelas em uma fase', check: () => Object.values(Save.data.campaign.stars).some(v => v >= 3) }
 ];
 
 function checkAchievements() {

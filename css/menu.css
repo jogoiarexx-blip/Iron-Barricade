@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(rgba(10,14,20,0.60), rgba(10,14,20,0.82)), url('../assets/images/ui/iron-barricade-title-screen.png') center/cover no-repeat, radial-gradient(ellipse at 50% 30%, #1a2230 0%, #0a0e14 70%);
+  background: linear-gradient(rgba(10,14,20,0.60), rgba(10,14,20,0.82)), url('../assets/images/ui/iron-barricade-title-screen.webp') center/cover no-repeat, radial-gradient(ellipse at 50% 30%, #1a2230 0%, #0a0e14 70%);
   z-index: 100;
 }
 
@@ -100,7 +100,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(rgba(8,12,18,0.48), rgba(8,12,18,0.78)), url('../assets/images/ui/iron-barricade-title-screen.png') center/cover no-repeat, radial-gradient(ellipse at 30% 20%, #1a2a3a 0%, #0a0e14 60%);
+  background: linear-gradient(rgba(8,12,18,0.48), rgba(8,12,18,0.78)), url('../assets/images/ui/iron-barricade-title-screen.webp') center/cover no-repeat, radial-gradient(ellipse at 30% 20%, #1a2a3a 0%, #0a0e14 60%);
   z-index: 50;
 }
 
@@ -593,4 +593,65 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/* v1.7 Mission briefing */
+.mission-briefing {
+  width: min(980px, 92vw);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin: 10px auto 18px;
+}
+.brief-block {
+  background: rgba(9, 14, 21, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+.brief-block h3 {
+  font-family: var(--font-display);
+  color: var(--energy);
+  font-size: .86rem;
+  margin-bottom: 9px;
+  letter-spacing: 1px;
+}
+.threat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 7px;
+}
+.threat-card {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: rgba(26, 38, 54, .9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.threat-card.new-threat {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(255,107,26,.18);
+}
+.threat-icon { font-size: 1.8rem; }
+.threat-card strong { display: inline-block; font-size: .8rem; }
+.threat-card small { display: block; color: var(--text-dim); font-size: .67rem; line-height: 1.2; margin-top: 2px; }
+.new-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: .55rem;
+}
+.star-goals { color: var(--text-dim); line-height: 1.7; font-size: .82rem; }
+.mission-rule { color: #ffd27a; font-size: .82rem; margin-top: 4px; }
+.unit-rule-lock { color: var(--danger); font-size: .55rem; margin-top: 4px; }
+.star-result-lines { margin-top: 9px; color: var(--text-dim); font-size: .78rem; line-height: 1.55; }
+@media (max-width: 780px) {
+  .mission-briefing { grid-template-columns: 1fr; }
+  .threat-grid { grid-template-columns: repeat(2, 1fr); }
 }

@@ -193,10 +193,18 @@ class Grid {
     for (let r = 0; r < this.rows; r++) {
       const comp = this.compactors[r];
       const cy = this.getLaneY(r);
-      ctx.fillStyle = comp.used ? 'rgba(100, 50, 50, 0.6)' : 'rgba(255, 150, 50, 0.4)';
+      const pulse = 1 + (comp.used ? 0 : Math.sin(performance.now() * 0.004 + r) * 0.12);
+      ctx.fillStyle = comp.used ? 'rgba(100, 50, 50, 0.6)' : 'rgba(255, 150, 50, 0.45)';
       ctx.beginPath();
-      ctx.arc(this.offsetX - 10, cy, 8, 0, 6.28318530718);
+      ctx.arc(this.offsetX - 10, cy, 8 * pulse, 0, 6.28318530718);
       ctx.fill();
+      if (!comp.used) {
+        ctx.strokeStyle = 'rgba(255,190,90,0.35)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(this.offsetX - 10, cy, 11 * pulse, 0, 6.28318530718);
+        ctx.stroke();
+      }
     }
   }
 

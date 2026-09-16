@@ -342,7 +342,7 @@ class AssetManager {
       ui_energy: 'Carregando interface...'
     };
     if (labels[id]) return labels[id];
-    if (id.startsWith('vorak')) return `Carregando ${id}...`;
+    if (id.startsWith('riftborn')) return `Carregando ${id}...`;
     return `Carregando ${id}...`;
   }
 

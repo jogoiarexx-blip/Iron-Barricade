@@ -77,6 +77,23 @@ class WaveManager {
 
     this.waveInProgress = true;
 
+    // Announce the wave only when it actually starts. The 5s preparation remains hidden.
+    Effects.showAlert(`ONDA ${this.currentWave + 1}/${this.totalWaves}`, 1200);
+    Audio.playSfx('alert', 0.22);
+
+    // Teach newly introduced enemies at the moment they first enter the campaign.
+    if (wave.introducedEnemy) {
+      const introduced = getEnemyData(wave.introducedEnemy);
+      if (introduced) {
+        setTimeout(() => {
+          if (game.running && !game._levelEnded) {
+            Effects.showAlert(`NOVA AMEAÇA: ${introduced.name.toUpperCase()}`, 2200);
+            Audio.playSfx('alert', 0.35);
+          }
+        }, 350);
+      }
+    }
+
     if (wave.isBig) {
       Effects.showAlert('⚠ GRANDE INVASÃO DETECTADA ⚠', 3000);
       Effects.screenShake(3);

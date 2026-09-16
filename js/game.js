@@ -34,10 +34,10 @@ class GameEngine {
     this._bgColor = '#0d1219';
     
     this.diffMods = {
-      easy: { hp: 0.7, speed: 0.85, energy: 1.3, reward: 1.2 },
+      easy: { hp: 0.7, speed: 0.85, energy: 1.3, reward: 0.8 },
       normal: { hp: 1, speed: 1, energy: 1, reward: 1 },
-      hard: { hp: 1.35, speed: 1.1, energy: 0.85, reward: 0.9 },
-      nightmare: { hp: 1.7, speed: 1.2, energy: 0.7, reward: 0.8 }
+      hard: { hp: 1.35, speed: 1.1, energy: 0.85, reward: 1.25 },
+      nightmare: { hp: 1.7, speed: 1.2, energy: 0.7, reward: 1.6 }
     };
 
     // Canvas performance flags
@@ -149,6 +149,13 @@ class GameEngine {
     this._bossBarTimer = 0;
     this._levelEnded = false;
     this._energyTick = 0;
+    this.elapsedTime = 0;
+    this.energySpent = 0;
+    this.defendersLost = 0;
+    this.specialObjectiveMet = true;
+    this.energyCap = null;
+    this.disableAmbientEnergy = false;
+    this.applySpecialObjectiveRules();
     this.grid.init();
     
     const world = WORLDS[(this.levelData?.world || 1) - 1];
@@ -191,6 +198,43 @@ class GameEngine {
     this.paused = false;
   }
 
+  applySpecialObjectiveRules() {
+    const obj = this.levelData?.specialObjective;
+    if (!obj) return;
+    if (obj.type === 'limitedEnergy') {
+      this.energyCap = obj.value || 100;
+      this.energy = Math.min(this.energy, this.energyCap);
+      this.disableAmbientEnergy = true;
+    }
+  }
+
+  canUseDefender(id) {
+    const obj = this.levelData?.specialObjective;
+    if (!obj) return true;
+    if (obj.type === 'noGenerators' && id === 'scrapGenerator') return false;
+    if (obj.type === 'onlyBasic') {
+      return ['boltCannon', 'scrapGenerator', 'tireWall', 'dualTower'].includes(id);
+    }
+    return true;
+  }
+
+  evaluateThirdStar() {
+    const req = this.levelData?.starRequirements?.three || 'efficiency';
+    if (req.startsWith('special:')) {
+      const obj = this.levelData?.specialObjective;
+      if (!obj) return true;
+      if (obj.type === 'finishUnder') return this.elapsedTime <= (obj.value || 180);
+      if (obj.type === 'noGenerators') return !this.selectedUnits.includes('scrapGenerator');
+      if (obj.type === 'onlyBasic') return this.selectedUnits.every(id => ['boltCannon','scrapGenerator','tireWall','dualTower'].includes(id));
+      if (obj.type === 'limitedEnergy') return this.energySpent <= Math.max(250, (obj.value || 100) * 3);
+      return this.specialObjectiveMet;
+    }
+    if (req === 'noDefenderLost') return this.defendersLost === 0;
+    if (req === 'fastClear') return this.elapsedTime <= (90 + (this.levelData?.index || 1) * 12);
+    if (req === 'efficiency') return this.energy >= 50;
+    return false;
+  }
+
   restartLevel() {
     if (this.levelId && this.selectedUnits.length) {
       this.startLevel(this.levelId, this.selectedUnits);
@@ -229,6 +273,7 @@ class GameEngine {
     } else {
       if ((this.cardCooldowns[id] || 0) > 0) return;
       const data = getDefenderData(id);
+      if (!this.canUseDefender(id)) return;
       if (!data || this.energy < data.cost) return;
       this.selectedCard = this.selectedCard === id ? null : id;
     }
@@ -260,7 +305,7 @@ class GameEngine {
 
     if (this.selectedCard) {
       const data = getDefenderData(this.selectedCard);
-      if (!data) return;
+      if (!data || !this.canUseDefender(this.selectedCard)) return;
       if (this.energy < data.cost) return;
       if (!this.grid.canPlace(cell.row, cell.col)) return;
 
@@ -268,6 +313,7 @@ class GameEngine {
       const defender = new Defender(data, level);
       if (this.grid.place(cell.row, cell.col, defender)) {
         this.energy -= data.cost;
+        this.energySpent += data.cost;
         this.cardCooldowns[this.selectedCard] = 2500;
         Save.addStat('machinesBuilt');
         Audio.playSfx('place');
@@ -285,16 +331,17 @@ class GameEngine {
   }
 
   addEnergy(amount) {
+    const before = this.energy;
     this.energy += amount;
-    Save.addStat('energyProduced', amount);
+    if (this.energyCap !== null) this.energy = Math.min(this.energy, this.energyCap);
+    Save.addStat('energyProduced', Math.max(0, this.energy - before));
   }
 
   onEnemyKilled(enemy) {
     this.kills++;
     const reward = enemy.data.reward || 10;
     this.score += reward;
-    // Energy refund scales with reward — keeps mid-game flowing
-    this.energy += Math.max(5, Math.floor(reward * 0.45));
+    // Kills grant score only. Energy economy is driven by generators + small ambient income.
     Save.addStat('enemiesDefeated');
     
     if (enemy.data.type === 'boss') {
@@ -349,8 +396,10 @@ class GameEngine {
     if (this.animId) cancelAnimationFrame(this.animId);
     
     let stars = 1;
-    if (this.compactorsUsed === 0) stars = 2;
-    if (this.compactorsUsed === 0 && this.kills >= 15) stars = 3;
+    const secondStar = this.compactorsUsed === 0;
+    const thirdStar = this.evaluateThirdStar();
+    if (secondStar) stars = 2;
+    if (secondStar && thirdStar) stars = 3;
 
     const scrap = Math.floor((50 + this.score * 0.5 + stars * 30) * (this.diffMods[this.difficulty]?.reward || 1));
     const unlocks = this._pendingUnlocks || this.levelData.unlocks || [];
@@ -364,6 +413,9 @@ class GameEngine {
     if (Save.data.resources.totalScrapEarned >= 10000) Save.unlockAchievement('scrap_master');
     if (this.compactorsUsed === 0) Save.unlockAchievement('no_scratches');
     if (Object.values(Save.data.defenders.levels).some(l => l >= 5)) Save.unlockAchievement('engineer');
+    if (this.defendersLost === 0) Save.unlockAchievement('perfect_engineer');
+    if (stars === 3) Save.unlockAchievement('three_star');
+    if (typeof checkAchievements === 'function') checkAchievements();
 
     UI.showVictory({
       levelId: this.levelId,
@@ -371,7 +423,10 @@ class GameEngine {
       score: this.score,
       scrap,
       kills: this.kills,
-      unlocks
+      unlocks,
+      thirdStarMet: thirdStar,
+      starDescriptions: this.levelData.starDescriptions || [],
+      elapsedTime: this.elapsedTime
     });
   }
 
@@ -434,6 +489,8 @@ class GameEngine {
   update(dt) {
     if (this._levelEnded) return;
 
+    this.elapsedTime += dt;
+
     // Cooldowns
     for (const id in this.cardCooldowns) {
       if (this.cardCooldowns[id] > 0) {
@@ -442,11 +499,12 @@ class GameEngine {
     }
 
     // Passive energy income (scrapyard ambient power)
-    this._energyTick += dt;
-    if (this._energyTick >= 5) {
-      this._energyTick -= 5;
-      this.addEnergy(5);
-      // subtle feedback only if no generators
+    if (!this.disableAmbientEnergy) {
+      this._energyTick += dt;
+      if (this._energyTick >= 5) {
+        this._energyTick -= 5;
+        this.addEnergy(5);
+      }
     }
 
     // Waves
@@ -461,7 +519,13 @@ class GameEngine {
     for (let i = 0; i < defenders.length; i++) {
       const d = defenders[i];
       d.update(dt, this.enemies, this.grid, this);
-      if (!d.alive) anyDead = true;
+      if (!d.alive) {
+        anyDead = true;
+        if (!d._lossCounted && !d.data.singleUse) {
+          d._lossCounted = true;
+          this.defendersLost++;
+        }
+      }
     }
     if (anyDead) this.grid.markDirty();
 
@@ -517,6 +581,24 @@ class GameEngine {
     } else {
       ctx.fillStyle = this._bgColor || '#0d1219';
       ctx.fillRect(0, 0, w, h);
+    }
+
+    // World 1 ambience: moving industrial scan glow and drifting dust.
+    if (this.levelData?.world === 1) {
+      const tt = performance.now() * 0.001;
+      const gx = ((tt * 48) % (w + 240)) - 120;
+      const grad = ctx.createLinearGradient(gx - 80, 0, gx + 80, 0);
+      grad.addColorStop(0, 'rgba(0,229,255,0)');
+      grad.addColorStop(0.5, 'rgba(0,229,255,0.035)');
+      grad.addColorStop(1, 'rgba(0,229,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255,140,66,0.035)';
+      for (let i = 0; i < 10; i++) {
+        const x = (i * 157 + tt * (8 + i)) % w;
+        const y = (i * 83 + Math.sin(tt + i) * 18 + h) % h;
+        ctx.fillRect(x, y, 2, 2);
+      }
     }
 
     const shake = Effects.getShakeOffset();

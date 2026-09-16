@@ -1,59 +1,79 @@
-# Iron Barricade
+# Iron Barricade v1.13 — Gameplay & Balance Update
 
-Jogo completo de defesa estratégica em HTML5 — universo original (ferro-velho tecnológico vs. invasão Riftborn).
+Jogo de defesa estratégica em HTML5 com campanha por linhas, máquinas improvisadas e invasores Riftborn.
+
+## Destaques da v1.13
+
+- Sprites Riftborn e chefes renomeados fisicamente para combinar com os IDs atuais do código.
+- 47 caminhos de assets validados, sem sprites configurados ausentes.
+- Dificuldade salva no `localStorage`.
+- Recompensas por dificuldade: Fácil 80%, Normal 100%, Difícil 125%, Pesadelo 160%.
+- Energia por kill removida; geradores voltam a ser a principal fonte estratégica de energia.
+- Energia inicial rebalanceada para compensar a nova economia.
+- Objetivos especiais funcionais:
+  - Sem Geradores: bloqueia o Gerador de Sucata.
+  - Apenas Torres Básicas: limita o loadout.
+  - Energia Limitada: limita energia armazenada e desliga geração ambiente.
+  - Conclua em até 3 minutos: meta real de estrela.
+- Sistema de estrelas ligado às regras reais da fase.
+- Briefing pré-fase mostra ameaças detectadas, inimigo novo e metas de estrelas.
+- Aviso `NOVA AMEAÇA` quando um inimigo novo estreia.
+- Mundo 1 com ondas curadas manualmente e progressão revisada.
+- Fases 1–3: 3 ondas; 4–6: 4 ondas; fase 7 em diante adiciona uma onda por fase.
+- Intervalo invisível de 5 segundos antes da primeira onda e entre ondas concluídas.
+- Conquistas centralizadas no arquivo `js/achievements.js`.
+- Loja de cosméticos agora permite compras com sucata.
+- Botões de Desafios e Sobrevivência ocultados enquanto esses modos ainda não estão completos.
 
 ## Como jogar
 
 ```bash
 npx serve .
-# ou: python -m http.server 8080
+# ou
+python -m http.server 8080
 ```
 
-Abra no navegador. **Não use `file://`**.
+Abra no navegador e acesse o endereço local informado. Evite `file://`.
 
-### Controles
+## Controles
 
 | Ação | Input |
-|------|--------|
-| Selecionar máquina | Clique/toque na carta **ou** teclas **1–8** |
-| Posicionar | Clique/toque na célula da grade |
-| Remover (chave inglesa) | Carta 🔧 **ou** tecla **0** / **R** |
-| Pausar | **ESC** |
-| Velocidade | Botões 1x/2x/3x **ou** **Espaço** |
+|---|---|
+| Selecionar máquina | Clique/toque ou teclas 1–8 |
+| Posicionar | Clique/toque na célula |
+| Remover | Chave inglesa, tecla 0 ou R |
+| Pausar | ESC |
+| Velocidade | 1x / 2x / 3x ou Espaço |
 
-### Recursos
+## Progressão do Mundo 1
 
-- **Energia** — constrói máquinas (passiva a cada 5s + geradores + kills)
-- **Sucata** — moeda permanente (oficina / upgrades)
+1. Scout
+2. + Shield
+3. + Runner
+4. + Brute
+5. + Leaper
+6. + Technician
+7. + Splitter
+8. + Commander
+9. + Flyer
+10. Recapitulação + Ironclad Colossus
+
+## Identidade visual
+
+- Logo: `assets/images/ui/iron-barricade-logo.webp`
+- Tela inicial: `assets/images/ui/iron-barricade-title-screen.webp`
 
 ## Estrutura
 
-```
-index.html
-css/          main, menu, game, responsive
-js/           game, grid, defenders, enemies, projectiles, waves,
-              assets, ui, audio, particles, effects, save...
-data/         defenders, enemies, levels, upgrades, sprites
-assets/       sprites, backgrounds, audio (placeholders prontos)
-```
-
-## Progressão
-
-- 5 mundos × 10 fases + chefes (55 fases)
-- 15 máquinas · 20+ inimigos · 5 chefes
-- Oficina (5 níveis/unidade) · conquistas · coleção · save localStorage
-- Loading real de sprites **entre fases** (cache + fallback procedural)
-
-## Arte / áudio
-
-Coloque WebP em `assets/images/sprites/...` conforme `data/sprites.js`.  
-Sem arquivos, o jogo gera placeholders e não quebra.
-
-## Versão
-
-1.3 — identidade animada, IDs Riftborn padronizados e novo sistema de ondas com intervalo oculto fixo de 5 segundos.
+- `data/` — unidades, inimigos, fases, upgrades e sprites
+- `js/` — gameplay, ondas, UI, save, áudio e efeitos
+- `assets/` — imagens, sprites e áudio
+- `css/` — interface, jogo e responsividade
 
 
-## Identidade visual
-- Logo oficial: `assets/images/ui/iron-barricade-logo.png`
-- Tela inicial: `assets/images/ui/iron-barricade-title-screen.png`
+## Novidades da v1.13
+
+- Integração de **sprites gerados de verdade** no jogo (não mais sheets desenhados apenas por canvas para essas unidades).
+- Sprites salvos com **fundo transparente** e convertidos para **WebP**.
+- Primeira leva integrada: Scrap Generator, Bolt Cannon, Tire Wall, Dual Tower, Industrial Freezer, Tesla Coil, Hydraulic Press, Oil Launcher, Riftborn Scout e Riftborn Shield.
+- Restante das imagens do projeto também foi convertido para `.webp` para manter compatibilidade com o pipeline visual.
