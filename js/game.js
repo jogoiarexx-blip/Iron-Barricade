@@ -126,12 +126,27 @@ class GameEngine {
   }
 
   async startLevel(levelId, selectedUnits) {
+    // Ensure there is never more than one active game loop.
+    // This matters especially when restarting a phase while the previous loop still exists.
+    this.running = false;
+    if (this.animId) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
+
     // Real loading screen — sprites of this phase
     await UI.showPhaseLoading(levelId, selectedUnits);
 
     this.levelId = levelId;
     this.levelData = getLevel(levelId);
+    if (!this.levelData) {
+      console.error(`[Iron Barricade] Fase inválida: ${levelId}`);
+      UI.showMainMenu();
+      return;
+    }
     this.selectedUnits = selectedUnits;
+    Projectiles.clear();
+    Particles.clear();
     this.energy = Math.floor((this.levelData.startingEnergy || 50) * (this.diffMods[this.difficulty]?.energy || 1));
     this.enemies = [];
     this.enemiesByRow = [];
@@ -178,13 +193,13 @@ class GameEngine {
     this.resize();
     this.waves.start(this.levelData);
     
-    // Tutorial for first level
+    // Tutorial for first level. It may pause the game, but the RAF loop remains singular.
     if (levelId === '1-1' && !Save.data.tutorialCompleted) {
       this.runTutorial();
     }
 
     this.lastTime = performance.now();
-    this.loop();
+    this.animId = requestAnimationFrame((time) => this.loop(time));
   }
 
   async runTutorial() {
@@ -196,6 +211,8 @@ class GameEngine {
     Save.data.tutorialCompleted = true;
     Save.autoSave();
     this.paused = false;
+    // Prevent the tutorial duration from being interpreted as one giant simulation frame.
+    this.lastTime = performance.now();
   }
 
   applySpecialObjectiveRules() {
@@ -442,14 +459,27 @@ class GameEngine {
     });
   }
 
-  loop(now) {
+  loop(now = performance.now()) {
     if (!this.running) return;
+
+    // Schedule exactly one next frame for this loop chain.
     this.animId = requestAnimationFrame((t) => this.loop(t));
-    
-    if (this.paused) return;
-    
-    const dt = Math.min((now - this.lastTime) / 1000, 0.05) * this.speed;
-    this.lastTime = now;
+
+    if (this.paused) {
+      // Keep the clock synchronized while paused so resume cannot create a huge delta.
+      this.lastTime = Number.isFinite(now) ? now : performance.now();
+      return;
+    }
+
+    const currentTime = Number.isFinite(now) ? now : performance.now();
+    if (!Number.isFinite(this.lastTime) || this.lastTime <= 0) this.lastTime = currentTime;
+
+    let dt = (currentTime - this.lastTime) / 1000;
+    this.lastTime = currentTime;
+
+    // A bad timestamp must never poison wave timers with NaN/Infinity.
+    if (!Number.isFinite(dt) || dt < 0) dt = 0;
+    dt = Math.min(dt, 0.05) * this.speed;
 
     this.update(dt);
     this.draw();

@@ -17,7 +17,7 @@ class WaveManager {
   }
 
   start(levelData) {
-    this.waves = levelData.waves || [];
+    this.waves = Array.isArray(levelData?.waves) ? levelData.waves : [];
     this.currentWave = 0;
     this.waveTimer = this.interWaveDelay; // hidden 5-second initial preparation
     this.spawnQueue = [];
@@ -29,10 +29,15 @@ class WaveManager {
 
   update(dt, game) {
     if (!this.active || this.finished) return;
+    if (!Number.isFinite(dt) || dt < 0) return;
+
+    // Recover safely if an older/bad frame ever contaminated a timer.
+    if (!Number.isFinite(this.waveTimer)) this.waveTimer = this.interWaveDelay;
 
     // Spawn queued enemies for the active wave.
     for (let i = this.spawnQueue.length - 1; i >= 0; i--) {
       const s = this.spawnQueue[i];
+      if (!Number.isFinite(s.timer)) s.timer = Math.max(0, s.interval || 0);
       s.timer -= dt * 1000;
       if (s.timer <= 0) {
         this.spawnEnemy(s, game);
@@ -73,8 +78,15 @@ class WaveManager {
 
   triggerWave(game) {
     const wave = this.waves[this.currentWave];
-    if (!wave) return;
+    if (!wave) {
+      // Never leave the manager active forever on malformed level data.
+      this.finished = true;
+      this.active = false;
+      console.error(`[Iron Barricade] Onda inválida no índice ${this.currentWave}.`);
+      return;
+    }
 
+    if (!Array.isArray(wave.enemies)) wave.enemies = [];
     this.waveInProgress = true;
 
     // Announce the wave only when it actually starts. The 5s preparation remains hidden.
@@ -101,6 +113,7 @@ class WaveManager {
     }
 
     for (const group of wave.enemies) {
+      if (!group || !group.type) continue;
       if (group.type === 'boss') {
         const bossData = getEnemyData(group.bossId);
         if (bossData) {
@@ -130,7 +143,10 @@ class WaveManager {
 
   spawnEnemy(s, game) {
     const data = getEnemyData(s.type);
-    if (!data) return;
+    if (!data) {
+      console.error(`[Iron Barricade] Tipo de inimigo não encontrado: ${s.type}`);
+      return;
+    }
     let row;
     if (data.type === 'air') {
       row = Math.floor(Math.random() * game.grid.rows);

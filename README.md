@@ -1,8 +1,8 @@
-# Iron Barricade v1.14 — Gameplay & Balance Update
+# Iron Barricade v1.16 — Gameplay & Balance Update
 
 Jogo de defesa estratégica em HTML5 com campanha por linhas, máquinas improvisadas e invasores Riftborn.
 
-## Destaques da v1.14
+## Destaques da v1.16
 
 - Sprites Riftborn e chefes renomeados fisicamente para combinar com os IDs atuais do código.
 - 47 caminhos de assets validados, sem sprites configurados ausentes.
@@ -71,7 +71,7 @@ Abra no navegador e acesse o endereço local informado. Evite `file://`.
 - `css/` — interface, jogo e responsividade
 
 
-## Novidades da v1.14
+## Novidades da v1.16
 
 - Integração de **sprites gerados de verdade** no jogo (não mais sheets desenhados apenas por canvas para essas unidades).
 - Sprites salvos com **fundo transparente** e convertidos para **WebP**.
@@ -79,9 +79,20 @@ Abra no navegador e acesse o endereço local informado. Evite `file://`.
 - Restante das imagens do projeto também foi convertido para `.webp` para manter compatibilidade com o pipeline visual.
 
 
-## Correção 404 da v1.14
+## Correção 404 da v1.16
 
 - Adicionado `favicon.ico` real na raiz do projeto.
 - Adicionado `assets/images/ui/favicon.webp`.
 - `index.html` agora referencia explicitamente o favicon com caminhos relativos compatíveis com GitHub Pages.
 - Auditoria de caminhos estáticos salva em `build_reports/404-path-audit.json`.
+
+
+## Correções da v1.16
+
+- Corrigido bug crítico que fazia o primeiro `dt` virar `NaN` e travava o temporizador das ondas, impedindo inimigos de iniciar.
+- O game loop agora é iniciado exclusivamente via `requestAnimationFrame` com timestamp válido.
+- Proteção contra `NaN`/`Infinity` em timers de ondas e spawn.
+- Reiniciar uma fase agora cancela o loop anterior antes de criar o novo, evitando loops duplicados.
+- Relógio é ressincronizado após tutorial e pausas.
+- Limpeza de projéteis e partículas ao iniciar/reiniciar fases.
+- Validação de fase, onda e tipos de inimigos inválidos com fallback seguro e logs claros no console.
